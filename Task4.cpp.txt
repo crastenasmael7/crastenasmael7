@@ -1,0 +1,89 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+using namespace std;
+
+struct Person
+{
+    string name;
+    int age;
+};
+
+int main()
+{
+    int n;
+    Person p;
+
+    cout << "Enter number of persons: ";
+    cin >> n;
+
+    // Step 1: Save persons in file
+    ofstream out("persons.txt");
+
+    for (int i = 0; i < n; i++)
+    {
+        cout << "Enter name: ";
+        cin >> ws;
+        getline(cin, p.name);
+
+        cout << "Enter age: ";
+        cin >> p.age;
+
+        out << p.name << endl;
+        out << p.age << endl;
+    }
+
+    out.close();
+
+    // Step 2: Read persons into vector
+    vector<Person> persons;
+    ifstream in("persons.txt");
+
+    while (getline(in, p.name))
+    {
+        if (in >> p.age)
+        {
+            in.ignore();
+            persons.push_back(p);
+        }
+    }
+
+    in.close();
+
+    // Find youngest and oldest
+    if (persons.empty())
+    {
+        cout << "No persons found";
+        return 0;
+    }
+
+    Person youngest = persons[0];
+    Person oldest = persons[0];
+
+    for (int i = 1; i < persons.size(); i++)
+    {
+        if (persons[i].age < youngest.age)
+            youngest = persons[i];
+
+        if (persons[i].age > oldest.age)
+            oldest = persons[i];
+    }
+
+    // Save results
+    ofstream result("results.txt");
+
+    result << "Youngest person: "
+           << youngest.name << " "
+           << youngest.age << endl;
+
+    result << "Oldest person: "
+           << oldest.name << " "
+           << oldest.age << endl;
+
+    result.close();
+
+    cout << "Results saved successfully";
+
+    return 0;
+}
